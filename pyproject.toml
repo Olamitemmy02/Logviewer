@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "logviewer"
+version = "1.0.0"
+description = "Security Log Viewer CLI Tool"
+dependencies = [
+    "rich"
+]
+
+
+[project.scripts]
+logviewer = "logviewer.cli:run"
+
+
+[tool.setuptools.packages.find]
+include = ["logviewer*"]
