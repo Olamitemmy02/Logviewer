@@ -100,7 +100,7 @@ It can be adapted for other operating systems depending on the log sources and s
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Olamitemy02/LogViewer.git
+git clone https://github.com/Olamitemy02/Logviewer.git
 ```
 
 ### 2. Enter the Project Directory
