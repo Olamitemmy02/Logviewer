@@ -278,7 +278,15 @@ https://github.com/Olamitemmy02
 
 ## License
 
-This project does not currently specify an open-source license.
+LogViewer is free for personal, educational, and non-commercial use.
+
+Commercial use, resale, redistribution for payment, and commercial
+products incorporating LogViewer are subject to the LogViewer
+Personal, Educational & Commercial Royalty License.
+
+Commercial royalty: 15% of applicable gross revenue.
+
+For commercial licensing, contact the copyright holder.
 
 A license will be added in a future release.
 
