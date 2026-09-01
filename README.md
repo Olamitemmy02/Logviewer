@@ -379,14 +379,17 @@ Only analyze systems and log data that you are authorized to access.
 
 ---
 
+
 ## License
 
-Add the project's chosen license here.
+LogViewer is distributed under the **LogViewer Personal, Educational & Commercial Royalty License**.
 
-For example:
+- Personal use: permitted
+- Educational use: permitted
+- Academic projects: permitted
+- Non-commercial research: permitted
+- Security laboratories and training: permitted
+- Commercial use: permitted subject to the license terms
+- Commercial royalty: 15% of applicable Gross Revenue
 
-```text
-MIT License
-```
-
-if the project is released under the MIT License.
+See the [`LICENSE`](LICENSE) file for the complete license terms.
