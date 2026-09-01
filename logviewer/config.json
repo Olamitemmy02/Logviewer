@@ -1,6 +1,17 @@
 {
-    "log_directory": "logs",
+    "log_directory": "/var/log",
     "export_directory": "exports",
     "theme": "blue",
-    "log_level": "INFO"
+    "log_level": "INFO",
+    "recursive_log_discovery": true,
+    "monitor_all_logs": true,
+    "ignore_extensions": [
+        ".gz",
+        ".zip",
+        ".xz",
+        ".bz2",
+        ".lz4",
+        ".zst"
+    ],
+    "max_log_size_mb": 100
 }

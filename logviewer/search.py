@@ -3,187 +3,66 @@ from pathlib import Path
 from rich.console import Console
 from rich.table import Table
 from rich.prompt import Prompt
-from rich.panel import Panel
+
+from .discovery import discover_system_logs, discover_snort_logs
 
 
 console = Console()
 
 
-LOG_DIRECTORY = Path("logs")
+def get_search_sources():
 
+    sources = []
 
-
-def get_logs():
-
-    """
-    Find all log files.
-    """
-
-    if not LOG_DIRECTORY.exists():
-
-        LOG_DIRECTORY.mkdir()
-
-        return []
-
-
-    return list(
-        LOG_DIRECTORY.glob("*.log")
+    sources.extend(
+        discover_system_logs()
     )
 
+    sources.extend(
+        discover_snort_logs()
+    )
+
+    return sorted(set(sources))
 
 
-def search_file(log_file, keyword):
+def search_file(path, keyword):
 
-    """
-    Search inside one log file.
-    """
-
-    results = []
-
+    matches = []
 
     try:
 
         with open(
-            log_file,
+            path,
             "r",
-            errors="ignore"
+            encoding="utf-8",
+            errors="replace"
         ) as file:
 
-
-            for number, line in enumerate(
+            for line_number, line in enumerate(
                 file,
                 start=1
             ):
 
                 if keyword.lower() in line.lower():
 
-                    results.append(
+                    matches.append(
                         (
-                            number,
-                            line.strip()
+                            line_number,
+                            line.rstrip()
                         )
                     )
 
+    except (PermissionError, OSError):
+        return []
 
-    except Exception as error:
-
-        console.print(
-            f"[red]Error:[/red] {error}"
-        )
-
-
-    return results
-
-
-
-def display_results(results, filename):
-
-    """
-    Display search results.
-    """
-
-    if not results:
-
-        console.print(
-            Panel(
-                "No matching results found.",
-                title="Search",
-                border_style="red"
-            )
-        )
-
-        return
-
-
-
-    table = Table(
-        title=f"Results: {filename}",
-        border_style="cyan"
-    )
-
-
-    table.add_column(
-        "Line",
-        style="yellow"
-    )
-
-
-    table.add_column(
-        "Content",
-        style="white"
-    )
-
-
-    for line_number, content in results:
-
-        table.add_row(
-            str(line_number),
-            content
-        )
-
-
-    console.print(table)
-
-
-
-def search_all_logs(keyword):
-
-    """
-    Search every log file.
-    """
-
-    logs = get_logs()
-
-
-    if not logs:
-
-        console.print(
-            "[red]No log files available[/red]"
-        )
-
-        return
-
-
-
-    total = 0
-
-
-    for log in logs:
-
-        results = search_file(
-            log,
-            keyword
-        )
-
-
-        if results:
-
-            display_results(
-                results,
-                log.name
-            )
-
-            total += len(results)
-
-
-
-    console.print(
-        f"\n[green]Found {total} matches[/green]"
-    )
-
+    return matches
 
 
 def search_menu():
 
-    """
-    Search interface.
-    """
-
-
     keyword = Prompt.ask(
         "Enter search keyword"
-    )
-
+    ).strip()
 
     if not keyword:
 
@@ -193,8 +72,60 @@ def search_menu():
 
         return
 
+    sources = get_search_sources()
 
+    if not sources:
 
-    search_all_logs(
-        keyword
-    )
+        console.print(
+            "[yellow]No log sources found.[/yellow]"
+        )
+
+        return
+
+    total = 0
+
+    for source in sources:
+
+        matches = search_file(
+            source,
+            keyword
+        )
+
+        if not matches:
+            continue
+
+        table = Table(
+            title=f"Matches: {Path(source).name}"
+        )
+
+        table.add_column(
+            "Line",
+            style="yellow"
+        )
+
+        table.add_column(
+            "Content"
+        )
+
+        for line_number, content in matches[-50:]:
+
+            table.add_row(
+                str(line_number),
+                content
+            )
+
+        console.print(table)
+
+        total += len(matches)
+
+    if total == 0:
+
+        console.print(
+            f"[yellow]No matches found for: {keyword}[/yellow]"
+        )
+
+    else:
+
+        console.print(
+            f"\n[green]Total matches: {total}[/green]"
+        )
