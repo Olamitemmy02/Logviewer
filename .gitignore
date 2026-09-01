@@ -1,11 +1,29 @@
+# Python
 __pycache__/
 *.pyc
-.venv
+*.pyo
+
+# Virtual environments
+.venv/
 venv/
-.env
-*.db
-*.sqlite
-*.sqlite3
+env/
+
+# Packaging
 build/
 dist/
 *.egg-info/
+
+# Environment/secrets
+.env
+*.env
+
+# Runtime logs
+logs/*
+!logs/.gitkeep
+
+# Generated exports
+exports/*
+!exports/.gitkeep
+
+# Generated Snort output
+alert_csv.txt
