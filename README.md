@@ -1,36 +1,38 @@
-# LogViewer
+LogViewer
 
-**LogViewer** is a Python-based security log analysis and monitoring tool designed to inspect, search, filter, analyze, and monitor log data from a Linux system.
+LogViewer is a Python-based security log analysis and monitoring tool designed to inspect, search, filter, analyze, and monitor real log data from Linux systems.
 
-Instead of relying on bundled demonstration logs, LogViewer is designed to work with **real log sources available on the host system**, including traditional `/var/log` files, systemd journal data, and security-tool logs such as Snort.
+Instead of relying on bundled demonstration logs, LogViewer works with real log sources available on the host system, including traditional "/var/log" files, systemd journal data, and security-tool logs such as Snort.
+
+The long-term goal is to evolve LogViewer from a log viewer into an evidence-driven threat investigation platform that helps analysts understand not only what happened, but how events are connected and why they matter.
 
 ---
 
-## Features
+Features
 
-### System Log Discovery
+System Log Discovery
 
 Automatically discovers accessible log files available on the current Linux system.
 
 Examples include:
 
-* `/var/log/auth.log`
-* `/var/log/syslog`
-* `/var/log/kern.log`
-* `/var/log/ufw.log`
-* `/var/log/cron.log`
-* `/var/log/apt/`
-* `/var/log/apache2/`
-* `/var/log/nginx/`
-* `/var/log/caddy/`
-* `/var/log/postgresql/`
-* `/var/log/snort/`
+* "/var/log/auth.log"
+* "/var/log/syslog"
+* "/var/log/kern.log"
+* "/var/log/ufw.log"
+* "/var/log/cron.log"
+* "/var/log/apt/"
+* "/var/log/apache2/"
+* "/var/log/nginx/"
+* "/var/log/caddy/"
+* "/var/log/postgresql/"
+* "/var/log/snort/"
 
 The exact sources depend on the services installed and configured on the host.
 
-### Log Viewing
+Log Viewing
 
-View the contents of an accessible system log directly from the LogViewer interface.
+View the contents of accessible system logs directly through the LogViewer interface.
 
 Features include:
 
@@ -40,9 +42,9 @@ Features include:
 * Permission-aware access
 * Support for custom log sources
 
-### Search
+Search
 
-Search log events using keywords and other supported criteria.
+Search log events using keywords and supported criteria.
 
 Example use cases:
 
@@ -53,9 +55,9 @@ Example use cases:
 * Investigate errors
 * Locate specific timestamps or messages
 
-### Filtering
+Filtering
 
-Filter events to reduce large log datasets to relevant security information.
+Filter events to reduce large datasets to relevant security information.
 
 Filtering can be used for:
 
@@ -66,7 +68,7 @@ Filtering can be used for:
 * Time
 * Keywords
 
-### Statistics
+Statistics
 
 Generate statistics from the currently selected log data.
 
@@ -81,42 +83,51 @@ Examples include:
 
 Statistics are generated from the data being analyzed rather than predefined demonstration values.
 
-### Live Monitoring
+Live Monitoring
 
 Monitor log files as new events are written.
 
 This allows LogViewer to observe activity in real time and display newly generated events without repeatedly reopening the log file.
 
-### Snort Integration
+Snort Integration
 
-LogViewer includes a dedicated Snort analysis module for working with Snort alert data.
+LogViewer includes a dedicated Snort analysis subsystem for working with Snort alert data.
 
-The Snort subsystem includes:
-
-```text
 snort/
 ├── constants.py
 ├── reader.py
 ├── parser.py
 ├── analyzer.py
 └── dashboard.py
-```
 
-It is designed to allow Snort alerts to be analyzed alongside other system log sources.
+The Snort subsystem is designed to analyze network-security alerts alongside other system log sources.
 
-### Exporting
+IOC & Security Analysis
+
+LogViewer is being extended toward structured security analysis, including identification of security-relevant artifacts such as:
+
+* IP addresses
+* Domains
+* URLs
+* Processes
+* Commands
+* Security events
+* Alert information
+
+These capabilities form the foundation for future event correlation and threat investigation.
+
+Exporting
 
 Analyzed information can be exported for later review, reporting, or incident documentation.
 
-The project includes an `exports/` directory for generated reports.
+The project includes an "exports/" directory for generated reports.
 
 ---
 
-## Architecture
+Architecture
 
 LogViewer follows a modular architecture:
 
-```text
                      LOGVIEWER
                          |
                   System Discovery
@@ -148,13 +159,11 @@ LogViewer follows a modular architecture:
              +-----------+-----------+
              |                       |
         Live Monitor             Export
-```
 
 ---
 
-## Project Structure
+Project Structure
 
-```text
 LogViewer/
 │
 ├── logviewer/
@@ -199,11 +208,10 @@ LogViewer/
 ├── tests/
 ├── README.md
 └── requirements.txt
-```
 
 ---
 
-## Requirements
+Requirements
 
 * Linux operating system
 * Python 3.10+
@@ -213,42 +221,34 @@ Optional components such as Snort, Apache, Nginx, Caddy, UFW, Maltrail, or Postg
 
 ---
 
-## Installation
+Installation
 
 Clone the repository:
 
-```bash
 git clone <repository-url>
 cd LogViewer
-```
 
 Install the Python dependencies:
 
-```bash
 pip install -r requirements.txt
-```
 
 ---
 
-## Running LogViewer
+Running LogViewer
 
 From the project root:
 
-```bash
 python3 -m logviewer.main
-```
 
-The application should discover available system log sources rather than depending on bundled example logs.
+LogViewer should discover available system log sources rather than depending on bundled example logs.
 
 ---
 
-## System Log Discovery
+System Log Discovery
 
 LogViewer can identify accessible logs under locations such as:
 
-```text
 /var/log/
-```
 
 and relevant service-specific directories.
 
@@ -256,19 +256,17 @@ A system may expose different logs depending on its configuration.
 
 For example:
 
-```text
 [01] /var/log/auth.log
 [02] /var/log/syslog
 [03] /var/log/kern.log
 [04] /var/log/ufw.log
 [05] /var/log/snort/alert_csv.txt
-```
 
 Only sources available and accessible on the host are presented.
 
 ---
 
-## Permissions
+Permissions
 
 Some Linux security logs are restricted to privileged users.
 
@@ -276,20 +274,18 @@ If a log cannot be accessed, LogViewer should report the problem without termina
 
 For example:
 
-```text
 [!] Permission denied
 
 Source:
     /var/log/auth.log
 
 The selected log cannot currently be read.
-```
 
 Run LogViewer with the appropriate permissions when authorized and required by the system configuration.
 
 ---
 
-## Security and Privacy
+Security and Privacy
 
 Log files can contain sensitive information, including:
 
@@ -304,9 +300,8 @@ Do not publish real system logs to a public repository.
 
 The project's local log directory should remain separate from production source code.
 
-Recommended `.gitignore` entries:
+Recommended ".gitignore" entries:
 
-```gitignore
 __pycache__/
 *.pyc
 .venv/
@@ -318,33 +313,30 @@ logs/*
 
 exports/*
 !exports/.gitkeep
-```
 
 ---
 
-## Testing
+Testing
 
 Automated tests are kept separate from the production application.
 
-```text
 tests/
-```
 
 Test data should be synthetic, isolated, or generated temporarily for testing.
 
-Production LogViewer does **not** depend on test logs or demonstration data.
+Production LogViewer does not depend on test logs or demonstration data.
 
 ---
 
-## Development Roadmap
+Development Roadmap
 
-### Completed / In Progress
+Completed / In Progress
 
 * [x] Modular CLI architecture
 * [x] System information detection
 * [x] System log discovery
 * [x] Real log-file access
-* [x] Standardized `LogEvent` structure
+* [x] Standardized "LogEvent" structure
 * [x] File log source abstraction
 * [x] Snort analysis foundation
 * [ ] Unified log parsing
@@ -355,23 +347,107 @@ Production LogViewer does **not** depend on test logs or demonstration data.
 * [ ] Advanced reporting
 * [ ] Expanded automated test coverage
 
+Future Threat Investigation
+
+The next stage of LogViewer will focus on turning individual events and alerts into meaningful security investigations.
+
+Planned capabilities include:
+
+* [ ] IOC extraction and normalization
+* [ ] IOC-to-event correlation
+* [ ] Command execution analysis
+* [ ] Process-tree analysis
+* [ ] Attack-chain reconstruction
+* [ ] MITRE ATT&CK mapping
+* [ ] Threat scoring and confidence assessment
+* [ ] Evidence-backed findings
+* [ ] False-positive analysis
+* [ ] Investigation timelines
+* [ ] IOC relationship visualization
+* [ ] Threat-hunting assistance
+* [ ] Detection-rule generation
+* [ ] Automated incident summaries
+
+The objective is to answer:
+
+«What happened, what evidence supports it, how are the events connected, and what should the analyst investigate next?»
+
 ---
 
-## Design Principles
+LogViewer Pro
+
+The advanced threat-investigation capabilities are planned as part of the future LogViewer Pro offering.
+
+The Core version will remain focused on essential log analysis and monitoring, while Pro will provide deeper investigation and analysis capabilities.
+
+Core
+
+«See what's happening.»
+
+Pro
+
+«Understand what happened and investigate it.»
+
+Planned Pro capabilities include:
+
+* Advanced event correlation
+* Attack-chain reconstruction
+* Process and command analysis
+* Threat intelligence enrichment
+* MITRE ATT&CK analysis
+* Evidence-based incident assessment
+* Threat scoring
+* Investigation graphs
+* Threat-hunting assistance
+* Detection engineering
+* Advanced incident reporting
+
+LogViewer Pro is a future direction and should not be considered part of the currently completed feature set.
+
+---
+
+Design Principles
 
 LogViewer is being developed around several principles:
 
-1. **Real data over demonstration data**
-2. **Modular architecture**
-3. **System-aware operation**
-4. **Least-assumption design**
-5. **Clear separation between production code and tests**
-6. **Security-focused analysis**
-7. **Readable and maintainable Python code**
+1. Real data over demonstration data
+2. Evidence over assumptions
+3. Modular architecture
+4. System-aware operation
+5. Least-assumption design
+6. Clear separation between production code and tests
+7. Security-focused analysis
+8. Readable and maintainable Python code
 
 ---
 
-## Disclaimer
+Project Vision
+
+LogViewer aims to bridge the gap between raw security logs and understandable threat investigations.
+
+Rather than simply displaying an alert, the long-term goal is to help analysts connect:
+
+Events
+  ↓
+Indicators
+  ↓
+Processes
+  ↓
+Commands
+  ↓
+Network Activity
+  ↓
+Techniques
+  ↓
+Attack Chain
+  ↓
+Evidence-Based Investigation
+
+The project is actively evolving, and feedback from cybersecurity practitioners, students, researchers, and open-source contributors is welcome.
+
+---
+
+Disclaimer
 
 LogViewer is intended for authorized security monitoring, system administration, troubleshooting, and defensive security analysis.
 
@@ -379,10 +455,9 @@ Only analyze systems and log data that you are authorized to access.
 
 ---
 
+License
 
-## License
-
-LogViewer is distributed under the **LogViewer Personal, Educational & Commercial Royalty License**.
+LogViewer is distributed under the LogViewer Personal, Educational & Commercial Royalty License.
 
 - Personal use: permitted
 - Educational use: permitted
@@ -392,4 +467,4 @@ LogViewer is distributed under the **LogViewer Personal, Educational & Commercia
 - Commercial use: permitted subject to the license terms
 - Commercial royalty: 15% of applicable Gross Revenue
 
-See the [`LICENSE`](LICENSE) file for the complete license terms.
+See the ""LICENSE"" (LICENSE) file for the complete license terms.
