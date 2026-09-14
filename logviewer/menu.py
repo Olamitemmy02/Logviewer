@@ -140,9 +140,9 @@ def main_menu():
 
         elif choice == "8":
 
-            from .snort_summary import snort_summary
+            from .snort_summary import show_snort_summary
 
-            snort_summary()
+            show_snort_summary()
 
         elif choice == "9":
 
