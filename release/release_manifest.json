@@ -1,0 +1,100 @@
+{
+  "manifest_version": "1.0",
+  "product": {
+    "name": "LogViewer",
+    "release_track": "commercial",
+    "architecture": "core_plus_pro",
+    "description": "Evidence-driven Linux log investigation platform"
+  },
+  "core": {
+    "distribution": "free",
+    "license_required": false,
+    "capabilities": [
+      "log_viewing",
+      "log_search",
+      "log_filtering",
+      "live_monitoring",
+      "statistics",
+      "report_export",
+      "log_source_discovery",
+      "snort_alert_summary",
+      "ioc_extraction",
+      "security_correlation",
+      "security_analysis",
+      "application_settings",
+      "license_management"
+    ]
+  },
+  "pro": {
+    "distribution": "licensed",
+    "license_required": true,
+    "feature_ids": [
+      "investigation",
+      "threat_scoring",
+      "mitre",
+      "false_positive_analysis",
+      "process_tree",
+      "attack_chain",
+      "timeline",
+      "findings"
+    ],
+    "capabilities": [
+      "security_investigations",
+      "threat_scoring",
+      "mitre_attack_mapping",
+      "false_positive_analysis",
+      "process_tree_analysis",
+      "attack_chain_reconstruction",
+      "investigation_timelines",
+      "investigation_findings",
+      "investigation_reporting",
+      "evidence_packages",
+      "evidence_package_verification"
+    ]
+  },
+  "production_modules": {
+    "core": [
+      "logviewer",
+      "logviewer.analysis",
+      "logviewer.core",
+      "logviewer.sources",
+      "logviewer.snort"
+    ],
+    "pro": [
+      "logviewer.pro"
+    ]
+  },
+  "runtime_excluded": [
+    ".git",
+    ".github",
+    ".venv",
+    "venv",
+    "__pycache__",
+    ".pytest_cache",
+    "tests",
+    "exports",
+    "logs"
+  ],
+  "private_excluded": [
+    "logviewer_private_key.pem",
+    "private_key.pem",
+    "license.key",
+    "issued",
+    ".logviewer-pro-license-generator",
+    "credentials.json"
+  ],
+  "release_artifacts": [
+    "pyproject.toml",
+    "README.md",
+    "LICENSE",
+    "release/release_manifest.json"
+  ],
+  "distribution_policy": {
+    "core_source": "distributable",
+    "pro_source": "distributable_but_license_gated",
+    "private_signing_material": "never_distribute",
+    "customer_license": "issued_separately",
+    "payment_verification": "external_to_application",
+    "runtime_entitlement": "signed_license"
+  }
+}

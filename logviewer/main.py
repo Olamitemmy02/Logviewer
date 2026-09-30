@@ -1,19 +1,52 @@
+import os
+
+from rich.console import Console
+
 from .banner import startup
 from .menu import main_menu
+
+
+console = Console()
+
+
+def clear_terminal():
+    """
+    Clear the terminal screen before starting LogViewer.
+    """
+
+    os.system(
+        "cls"
+        if os.name == "nt"
+        else "clear"
+    )
 
 
 def start():
     """
     Main application controller.
-    Starts the banner, system checks,
-    and launches the Log Viewer dashboard.
+
+    Clears the terminal, starts the visual interface,
+    and launches the LogViewer dashboard.
+
+    Ctrl+C is handled here so KeyboardInterrupt does not
+    produce a traceback for the user.
     """
 
-    # Start visual interface
-    startup()
+    try:
+        clear_terminal()
+        startup()
+        main_menu()
 
-    # Launch interactive dashboard
-    main_menu()
+    except KeyboardInterrupt:
+        console.print(
+            "\n[yellow]LogViewer stopped by user.[/yellow]"
+        )
+
+    finally:
+        console.print(
+            "[dim]Goodbye.[/dim]"
+        )
+
 
 if __name__ == "__main__":
     start()

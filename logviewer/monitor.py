@@ -1,281 +1,444 @@
-import time
 from pathlib import Path
-from collections import OrderedDict
+from time import sleep
+from typing import Dict, List
 
 from rich.console import Console
-from rich.panel import Panel
-from rich.table import Table
 from rich.live import Live
-from rich.text import Text
-from rich.prompt import Prompt
+from rich.table import Table
 
 from .discovery import discover_logs
+from .analysis.events.service import EventService
+
 
 console = Console()
+event_service = EventService()
 
 
-class MultiLogMonitor:
+EXCLUDED_SUFFIXES = (
+    ".backup",
+    ".bak",
+    ".old",
+    ".orig",
+    ".save",
+)
+
+
+def get_monitor_sources(root="/var/log") -> List[Path]:
     """
-    Real-time monitor for multiple system log files.
+    Discover real log files that can be monitored.
+
+    Backup and saved-copy files are excluded so the monitor
+    does not display stale or test data.
+    """
+    sources = []
+
+    for source in discover_logs(root):
+        path = Path(source)
+
+        if not path.is_file():
+            continue
+
+        if path.name.lower().endswith(EXCLUDED_SUFFIXES):
+            continue
+
+        sources.append(path)
+
+    return sorted(
+        set(sources),
+        key=lambda path: str(path).lower(),
+    )
+
+
+class EventMonitor:
+    """
+    Live normalized-event monitor.
+
+    The monitor tracks file positions and sends only newly
+    appended lines through the shared EventService ingestion
+    pipeline.
     """
 
-    def __init__(self, root="/var/log", interval=0.5):
+    def __init__(
+        self,
+        root="/var/log",
+        interval=0.5,
+    ):
         self.root = Path(root)
         self.interval = interval
-        self.positions = {}
-        self.active_files = set()
-        self.events = []
 
-    def discover(self):
-        """
-        Discover current logs under /var/log.
-        """
-        return discover_logs(self.root)
+        self.positions: Dict[Path, int] = {}
+        self.sources: List[Path] = []
 
-    def initialize_positions(self, files):
+    def discover(self) -> List[Path]:
+        """
+        Refresh the list of monitorable sources.
+        """
+        self.sources = get_monitor_sources(self.root)
+        return self.sources
+
+    def initialize_positions(self) -> None:
         """
         Start monitoring from the current end of each file.
-        This prevents dumping existing historical logs immediately.
+
+        This prevents the live monitor from dumping historical
+        events when monitoring begins.
         """
-        for path in files:
-            if path in self.positions:
+        for source in self.sources:
+            try:
+                self.positions[source] = source.stat().st_size
+            except OSError:
                 continue
 
-            try:
-                self.positions[path] = path.stat().st_size
-            except (OSError, PermissionError):
-                self.positions[path] = 0
-
-    def read_new_data(self, path):
+    def read_new_data(self, source: Path):
         """
-        Read only data appended since the previous check.
+        Read newly appended data from one source.
+
+        The new content is written to a temporary in-memory
+        parser path and processed through the EventService.
         """
         try:
-            current_size = path.stat().st_size
-        except (OSError, PermissionError):
+            current_size = source.stat().st_size
+        except OSError:
             return []
 
-        previous_size = self.positions.get(path, 0)
+        previous_position = self.positions.get(
+            source,
+            current_size,
+        )
 
-        # Log rotation/truncation.
-        if current_size < previous_size:
-            previous_size = 0
+        # Handle truncation or log rotation.
+        if current_size < previous_position:
+            previous_position = 0
 
-        if current_size == previous_size:
+        if current_size == previous_position:
+            self.positions[source] = current_size
             return []
 
         try:
-            with path.open(
-                "r",
-                encoding="utf-8",
-                errors="replace"
-            ) as file:
+            with source.open(
+                "rb"
+            ) as handle:
+                handle.seek(previous_position)
+                data = handle.read()
 
-                file.seek(previous_size)
+            self.positions[source] = current_size
 
-                data = file.read()
-
-            self.positions[path] = current_size
-
-        except (OSError, PermissionError):
+        except (
+            OSError,
+            PermissionError,
+        ):
             return []
 
-        lines = data.splitlines()
+        if not data:
+            return []
 
-        return [
-            {
-                "source": str(path),
-                "message": line
-            }
-            for line in lines
-            if line.strip()
-        ]
+        text = data.decode(
+            "utf-8",
+            errors="replace",
+        )
 
-    def collect_events(self):
+        return self._parse_increment(
+            source,
+            text,
+        )
+
+    def _parse_increment(
+        self,
+        source: Path,
+        text: str,
+    ):
         """
-        Collect new events from every currently discovered log.
-        """
-        files = self.discover()
+        Parse newly appended text using the same parser registry
+        used by historical ingestion.
 
-        self.initialize_positions(files)
+        The increment is processed line-by-line so the monitor
+        remains lightweight.
+        """
+        parser = event_service.ingestion.get_parser(source)
+
+        if parser is None:
+            return []
 
         events = []
 
-        for path in files:
-            events.extend(self.read_new_data(path))
+        lines = text.splitlines()
+
+        for line in lines:
+            if not line.strip():
+                continue
+
+            try:
+                event = parser.parse_line(
+                    line,
+                    source,
+                )
+            except Exception:
+                event = None
+
+            if event is None:
+                continue
+
+            event.source = str(source)
+
+            if not event.raw:
+                event.raw = {}
+
+            event.raw.setdefault(
+                "source_path",
+                str(source),
+            )
+
+            events.append(event)
 
         return events
 
-    def add_events(self, events):
+    def poll(self):
         """
-        Maintain a bounded event history.
+        Poll all discovered sources for new events.
         """
-        for event in events:
-            self.events.append(event)
+        events = []
 
-        self.events = self.events[-25:]
+        self.discover()
 
-    def build_display(self):
-        """
-        Build the live Rich interface.
-        """
-        table = Table(
-            title="LIVE SYSTEM LOG MONITOR",
-            expand=True
-        )
-
-        table.add_column(
-            "Source",
-            style="cyan",
-            no_wrap=True
-        )
-
-        table.add_column(
-            "Event",
-            style="white"
-        )
-
-        if not self.events:
-            table.add_row(
-                "—",
-                "Waiting for new log events..."
+        for source in self.sources:
+            events.extend(
+                self.read_new_data(source)
             )
 
-        else:
-            for event in self.events[-15:]:
-                source = event["source"]
-
-                if len(source) > 42:
-                    source = "..." + source[-39:]
-
-                message = event["message"]
-
-                if len(message) > 100:
-                    message = message[:97] + "..."
-
-                table.add_row(
-                    source,
-                    message
-                )
-
-        return table
-
-    def run(self):
-        """
-        Start monitoring all discovered logs.
-        """
-        initial_files = self.discover()
-
-        if not initial_files:
-            console.print(
-                Panel(
-                    "[yellow]No readable log files were discovered "
-                    "under /var/log.[/yellow]"
-                )
-            )
-            return
-
-        self.initialize_positions(initial_files)
-
-        console.print(
-            Panel(
-                f"[green]Monitoring {len(initial_files)} log files "
-                f"under {self.root}[/green]\n\n"
-                "[cyan]New log files will be discovered automatically.[/cyan]\n"
-                "[yellow]Press Ctrl+C to stop.[/yellow]"
-            )
-        )
-
-        try:
-            with Live(
-                self.build_display(),
-                refresh_per_second=4,
-                console=console
-            ) as live:
-
-                while True:
-                    # Re-discover so newly created logs are included.
-                    files = self.discover()
-
-                    self.initialize_positions(files)
-
-                    new_events = self.collect_events()
-
-                    if new_events:
-                        self.add_events(new_events)
-
-                    live.update(self.build_display())
-
-                    time.sleep(self.interval)
-
-        except KeyboardInterrupt:
-            console.print(
-                "\n[yellow]Monitoring stopped.[/yellow]"
-            )
+        return event_service.sort_events(events)
 
 
-def monitor_all_logs():
+def build_monitor_table(events):
     """
-    Public entry point used by the menu.
+    Build a clean Rich table for live normalized events.
     """
-    monitor = MultiLogMonitor(
-        root="/var/log"
+    table = Table(
+        title="LogViewer — Live Event Monitor",
+        border_style="cyan",
+        expand=True,
     )
 
-    monitor.run()
+    table.add_column(
+        "Time",
+        style="cyan",
+        no_wrap=True,
+    )
+
+    table.add_column(
+        "Severity",
+        style="yellow",
+        no_wrap=True,
+    )
+
+    table.add_column(
+        "Source",
+        style="blue",
+        no_wrap=True,
+    )
+
+    table.add_column(
+        "Process",
+        style="magenta",
+        no_wrap=True,
+    )
+
+    table.add_column(
+        "PID",
+        style="green",
+        no_wrap=True,
+    )
+
+    table.add_column(
+        "Message",
+        overflow="fold",
+    )
+
+    for event in events[-100:]:
+        table.add_row(
+            event.timestamp or "-",
+            event.severity or "INFO",
+            Path(event.source).name
+            if event.source
+            else "-",
+            event.process or "-",
+            str(event.pid)
+            if event.pid is not None
+            else "-",
+            event.message or "-",
+        )
+
+    return table
+
+
+def monitor_live(
+    root="/var/log",
+    interval=0.5,
+):
+    """
+    Start the live normalized-event monitor.
+    """
+    monitor = EventMonitor(
+        root=root,
+        interval=interval,
+    )
+
+    sources = monitor.discover()
+
+    if not sources:
+        console.print(
+            "[yellow]No monitorable log sources were found.[/yellow]"
+        )
+        return
+
+    monitor.initialize_positions()
+
+    console.print()
+    console.print(
+        f"[green]Monitoring {len(sources)} "
+        f"real log source(s).[/green]"
+    )
+
+    console.print(
+        "[dim]Waiting for new events... "
+        "Press Ctrl+C to stop.[/dim]"
+    )
+
+    recent_events = []
+
+    try:
+        with Live(
+            build_monitor_table(recent_events),
+            console=console,
+            refresh_per_second=4,
+        ) as live:
+
+            while True:
+                events = monitor.poll()
+
+                if events:
+                    recent_events.extend(events)
+
+                    if len(recent_events) > 100:
+                        recent_events = recent_events[-100:]
+
+                live.update(
+                    build_monitor_table(
+                        recent_events
+                    )
+                )
+
+                sleep(interval)
+
+    except KeyboardInterrupt:
+        console.print()
+        console.print(
+            "[cyan]Live monitor stopped.[/cyan]"
+        )
+
+
+def monitor_all():
+    """
+    Compatibility wrapper for the existing menu.
+    """
+    monitor_live()
+
+
+def show_discovered():
+    """
+    Display the currently discovered monitorable sources.
+    """
+    sources = get_monitor_sources()
+
+    if not sources:
+        console.print(
+            "[yellow]No monitorable log sources were found.[/yellow]"
+        )
+        return
+
+    table = Table(
+        title="Monitorable Log Sources",
+        border_style="cyan",
+        expand=True,
+    )
+
+    table.add_column(
+        "Source",
+        style="blue",
+    )
+
+    table.add_column(
+        "Size",
+        style="green",
+        justify="right",
+    )
+
+    for source in sources:
+        try:
+            size = source.stat().st_size
+        except OSError:
+            size = 0
+
+        table.add_row(
+            str(source),
+            f"{size:,} B",
+        )
+
+    console.print(table)
+
+    console.print()
+    console.print(
+        f"[dim]{len(sources)} monitorable source(s).[/dim]"
+    )
 
 
 def monitor_menu():
     """
-    Live Monitor menu.
+    Interactive Live Monitor menu.
     """
     while True:
         table = Table(
-            title="LIVE MONITOR",
-            border_style="cyan"
+            title="Live Monitor",
+            border_style="cyan",
+            expand=True,
         )
 
         table.add_column(
             "Option",
-            style="yellow"
+            style="yellow",
+            no_wrap=True,
         )
 
         table.add_column(
-            "Function",
-            style="green"
+            "Action",
+            style="green",
         )
 
         table.add_row(
             "1",
-            "Monitor All /var/log Files"
+            "Monitor All Logs",
         )
 
         table.add_row(
             "2",
-            "Show Discovered Log Count"
+            "Show Discovered Sources",
         )
 
         table.add_row(
             "0",
-            "Back"
+            "Back",
         )
 
         console.print(table)
 
-        choice = Prompt.ask("Select option")
+        choice = console.input(
+            "[bold]Select option: [/bold]"
+        ).strip()
 
         if choice == "1":
-            monitor_all_logs()
+            monitor_all()
 
         elif choice == "2":
-            logs = discover_logs("/var/log")
-
-            console.print(
-                Panel(
-                    f"[green]Readable log files discovered: "
-                    f"{len(logs)}[/green]"
-                )
-            )
+            show_discovered()
 
         elif choice == "0":
             break

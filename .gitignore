@@ -7,23 +7,51 @@ __pycache__/
 .venv/
 venv/
 env/
+log_env/
 
-# Packaging
+# Packaging / build artifacts
 build/
 dist/
 *.egg-info/
 
-# Environment/secrets
+# Environment / secrets
 .env
 *.env
+.config/logviewer/
+logviewer_private_key.pem
+*.private.pem
 
 # Runtime logs
 logs/*
 !logs/.gitkeep
+logviewer/logs/*
+!logviewer/logs/.gitkeep
 
-# Generated exports
+# Runtime data
+data/*
+!data/.gitkeep
+
+# Generated investigation exports
+investigation.json
+investigation.csv
 exports/*
 !exports/.gitkeep
 
 # Generated Snort output
 alert_csv.txt
+
+# Test / tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Local editor / OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

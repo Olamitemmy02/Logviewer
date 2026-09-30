@@ -1,0 +1,6 @@
+{
+    "log_directory": "/var/log",
+    "export_directory": "exports",
+    "theme": "cyan",
+    "log_level": "INFO"
+}

@@ -16,7 +16,9 @@ For purposes of this License:
 
 “Gross Revenue” means the total amount actually received from customers for a Commercial Product or service attributable to the Software, before deduction of operating expenses, development costs, salaries, payment-processing fees, taxes, or other expenses.
 
-“Royalty” means fifteen percent (15%) of applicable Gross Revenue.
+“Royalty” means thirty percent (30%) of applicable Gross Revenue unless a separate written commercial agreement provides otherwise.
+
+“Pro License” means a valid commercial entitlement issued by or on behalf of the Copyright Holder that authorizes access to LogViewer Pro functionality for the applicable license period and scope.
 
 ---
 
@@ -33,19 +35,23 @@ Permission is granted, free of charge, to use, copy, modify, and study the Softw
 
 No royalty is required for these permitted non-commercial uses.
 
+LogViewer Pro functionality may additionally be subject to Pro entitlement controls implemented by the Software.
+
 ---
 
 3. Commercial Use
 
-Commercial Use is permitted only under the terms of this License.
+Commercial Use is permitted only under the terms of this License or under a separate written commercial agreement with the Copyright Holder.
 
 A person or organization may use, modify, distribute, sell, host, integrate, or otherwise commercially exploit the Software provided that:
 
-1. The Software remains subject to this License;
+1. The Software remains subject to this License unless another written agreement applies;
 2. The required Royalty is paid to the Copyright Holder;
 3. The original copyright notice is retained;
 4. A copy of this License is provided with redistributed versions where reasonably practicable; and
 5. The commercial user maintains accurate records sufficient to determine applicable Gross Revenue.
+
+Commercial access to LogViewer Pro functionality may require a valid Pro License in accordance with the applicable commercial offering.
 
 ---
 
@@ -53,7 +59,7 @@ A person or organization may use, modify, distribute, sell, host, integrate, or 
 
 Any person or organization that sells, licenses, rents, distributes for payment, hosts for payment, or otherwise commercially monetizes the Software or a Commercial Product must pay the Copyright Holder a Royalty equal to:
 
-15% of applicable Gross Revenue.
+30% of applicable Gross Revenue.
 
 The Royalty applies to revenue generated from:
 
@@ -66,6 +72,8 @@ The Royalty applies to revenue generated from:
 - Paid access to functionality substantially provided by the Software; and
 - Other commercial offerings in which the Software is a material component.
 
+The applicable Royalty may be changed, reduced, waived, or otherwise replaced only through a separate written commercial agreement executed by the Copyright Holder and the relevant commercial user or organization.
+
 ---
 
 5. Modified Versions
@@ -77,7 +85,7 @@ Commercial distribution or commercial exploitation of a modified version is perm
 1. The modified version complies with this License;
 2. The original copyright notice is retained;
 3. The modifications are clearly identified where reasonably practicable; and
-4. The applicable Royalty is paid.
+4. The applicable Royalty is paid unless a separate written commercial agreement provides otherwise.
 
 Creating a modified version does not transfer ownership of the original Software or its copyright.
 
@@ -92,13 +100,13 @@ Non-commercial redistribution is permitted provided that:
 - The Software is not represented as the redistributor's original work; and
 - No fee is charged for the Software itself beyond reasonable distribution costs.
 
-Commercial redistribution requires compliance with Section 4.
+Commercial redistribution requires compliance with Section 4 unless otherwise authorized by a separate written commercial agreement.
 
 ---
 
 7. Commercial License Agreement
 
-The Copyright Holder may, at their sole discretion, enter into separate written commercial agreements that:
+The Copyright Holder may, at their discretion, enter into separate written commercial agreements that:
 
 - Change the applicable Royalty;
 - Waive the Royalty;
@@ -112,7 +120,60 @@ A separately executed commercial agreement takes precedence over conflicting pro
 
 ---
 
-8. Royalty Reporting and Payment
+8. LogViewer Pro Licensing
+
+LogViewer may be distributed in Core and Pro editions or through equivalent entitlement-controlled functionality.
+
+Core functionality may be used without purchasing a Pro License, subject to the terms of this License.
+
+LogViewer Pro functionality requires an applicable valid Pro License or other written commercial authorization from the Copyright Holder.
+
+A Pro License may be subject to:
+
+- A defined license period;
+- A defined feature scope;
+- Activation and entitlement controls;
+- License expiration;
+- License identification;
+- License verification; and
+- Other terms stated in the applicable commercial documentation or written agreement.
+
+Current Pro feature descriptions, pricing, purchase procedures, renewal information, and activation guidance are maintained separately from this legal license.
+
+See:
+
+docs/PRO.md
+
+docs/PRO_PRICING_AND_PURCHASE.md
+
+docs/LICENSE_ACTIVATION.md
+
+For complete commercial purchase terms, customers purchasing or using LogViewer Pro should also read:
+
+docs/PRO_TERMS_AND_PURCHASE_AGREEMENT.md
+
+The Pro Purchase Agreement provides detailed terms covering:
+
+- Payment before Pro license delivery;
+- Pro license issuance and entitlement;
+- Customer acceptance;
+- Technical support and problem reporting;
+- Refunds and cancellations;
+- Unauthorized license sharing and redistribution;
+- License termination;
+- Commercial royalty obligations;
+- Transaction and payment records; and
+- Dispute handling.
+
+Unless a separate written agreement states otherwise, the applicable Pro purchase price must be paid and confirmed before a Pro License is issued or Pro access is delivered.
+
+The Pro Purchase Agreement supplements this License for Pro commercial transactions. Where a separately executed written commercial agreement provides different terms, that agreement takes precedence for the parties and subject matter covered by that agreement.
+
+The Copyright Holder may change commercial pricing independently of this License. Pricing does not alter the legal rights and obligations established by this License unless a separate written agreement states otherwise.
+
+---
+
+9. Royalty Reporting and Payment
 
 Commercial users must maintain records sufficient to calculate applicable Gross Revenue.
 
@@ -127,7 +188,7 @@ The Copyright Holder may reasonably request documentation necessary to verify re
 
 ---
 
-9. Audit Rights
+10. Audit Rights
 
 The Copyright Holder may, upon reasonable written notice, request records relevant to determining whether royalties have been properly calculated and paid.
 
@@ -135,17 +196,17 @@ If an audit identifies an underpayment of more than five percent (5%) for the au
 
 ---
 
-10. Attribution
+11. Attribution
 
 Commercial users must retain the following notice in an appropriate location within the Software, documentation, or product:
 
-«“This product incorporates LogViewer, Copyright © 2026 Olami.”»
+“This product incorporates LogViewer, Copyright © 2026 Olami.”
 
 The Copyright Holder's name may not be used to imply endorsement of a Commercial Product without prior written permission.
 
 ---
 
-11. No Transfer of Ownership
+12. No Transfer of Ownership
 
 This License grants usage rights only.
 
@@ -153,7 +214,7 @@ It does not transfer ownership of the Software, source code, copyright, trademar
 
 ---
 
-12. Termination
+13. Termination
 
 This License terminates automatically if a licensee materially violates its terms.
 
@@ -163,7 +224,7 @@ Termination does not eliminate payment obligations that accrued before terminati
 
 ---
 
-13. No Warranty
+14. No Warranty
 
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.
 
@@ -171,7 +232,7 @@ TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE COPYRIGHT HOLDER SHALL NOT BE LIABLE
 
 ---
 
-14. Reservation of Rights
+15. Reservation of Rights
 
 All rights not expressly granted by this License are reserved by the Copyright Holder.
 
@@ -179,7 +240,7 @@ Nothing in this License grants permission to use trademarks, logos, branding, or
 
 ---
 
-15. Acceptance
+16. Acceptance
 
 By using, modifying, distributing, selling, or commercially exploiting the Software, the user agrees to comply with the applicable terms of this License.
 

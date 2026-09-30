@@ -2,19 +2,25 @@
 requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
-
 [project]
 name = "logviewer"
 version = "1.0.0"
 description = "Security Log Viewer CLI Tool"
 dependencies = [
-    "rich"
+    "rich>=13.7.0",
+    "PyYAML>=6.0",
+    "cryptography>=42.0",
+    "pyfiglet>=1.0.2",
 ]
-
 
 [project.scripts]
 logviewer = "logviewer.cli:run"
 
-
 [tool.setuptools.packages.find]
+where = ["."]
 include = ["logviewer*"]
+
+[tool.setuptools.package-data]
+logviewer = [
+    "licensing/public_key.pem",
+]
