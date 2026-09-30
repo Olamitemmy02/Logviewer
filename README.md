@@ -158,6 +158,259 @@ The reporting workflow supports:
 
 ---
 
+
+## Visual Evidence
+
+The following screenshots document the LogViewer workflow and demonstrate the application's Core functionality, Pro investigation capabilities, evidence handling, reporting, and license management.
+
+### 1. LogViewer Main Menu
+
+The main menu provides access to the Core log investigation functions and licensed Pro capabilities.
+
+![LogViewer Main Menu](docs/images/Logviewer-main-menu.png)
+
+### 2. View Logs
+
+LogViewer can inspect real Linux log data collected from supported system and security log sources.
+
+![LogViewer View Logs](docs/images/Logviewer-view-logs.png)
+
+### 3. Log Statistics
+
+Statistics provide an overview of the available log data and event distribution.
+
+![LogViewer Statistics](docs/images/Logviewer-statistics.png)
+
+### 4. Security Correlation
+
+Security correlation identifies relationships between relevant log events and investigation data.
+
+![LogViewer Security Correlation](docs/images/Logviewer-security-correlation.png)
+
+### 5. Security Analysis
+
+Security analysis provides evidence-driven interpretation of security-related activity.
+
+![LogViewer Security Analysis](docs/images/Logviewer-security-analysis.png)
+
+---
+
+## Pro Investigation Evidence
+
+The following screenshots demonstrate the complete Pro investigation workflow.
+
+### 6. Investigation Overview
+
+The investigation overview provides the central summary of a structured Pro investigation.
+
+![LogViewer Pro Investigation Overview](docs/images/Logviewer-pro-investigation-overview.png)
+
+### 7. Investigation Workspace
+
+The Pro Investigation Workspace provides access to the individual investigation-analysis sections.
+
+![LogViewer Pro Investigation Workspace](docs/images/Logviewer-pro-investigation-workspace.png)
+
+### 8. Investigation Findings
+
+Findings organize analytical results with severity, confidence, rationale, supporting evidence, IOCs, correlations, and related information.
+
+![LogViewer Pro Investigation Findings](docs/images/Logviewer-pro-investigation-findings.png)
+
+### 9. Investigation Timeline
+
+The investigation timeline organizes investigation activity chronologically.
+
+![LogViewer Pro Investigation Timeline](docs/images/Logviewer-pro-investigation-timeline.png)
+
+### 10. Attack Chain
+
+Attack-chain reconstruction organizes related activity into an ordered representation when sufficient evidence exists.
+
+![LogViewer Pro Attack Chain](docs/images/Logviewer-pro-attack%20chain.png)
+
+### 11. Process Tree
+
+Process-tree analysis displays available parent-child process relationships.
+
+![LogViewer Pro Process Tree](docs/images/Logviewer-pro-process%20tree.png)
+
+### 12. MITRE ATT&CK Mapping
+
+MITRE ATT&CK mapping connects applicable investigation activity with relevant techniques.
+
+![LogViewer Pro MITRE Mapping](docs/images/Logviewer-pro-mitre-mappigs.png)
+
+### 13. Threat Assessment
+
+Threat assessment presents the analytical threat score, level, confidence, and supporting information.
+
+![LogViewer Pro Threat Assessment](docs/images/Logviewer-pro-Threat%20Assessment.png)
+
+### 14. False-Positive Analysis
+
+False-positive analysis provides context for activity that may have legitimate or non-malicious explanations.
+
+![LogViewer Pro False-Positive Analysis](docs/images/Logviewer-pro-false-positive%20analysis.png)
+
+### 15. IOC Analysis
+
+IOC extraction and presentation identifies indicators associated with investigation evidence.
+
+![LogViewer Pro IOC Analysis](docs/images/Logviewer-pro-ioc.png)
+
+### 16. Pro Correlation
+
+Pro correlation provides additional investigation relationships between relevant evidence and activity.
+
+![LogViewer Pro Correlation](docs/images/Logviewer-pro-correlation.png)
+
+### 17. Evidence Package
+
+Evidence packages combine investigation information with integrity metadata for controlled evidence handling.
+
+![LogViewer Pro Evidence Package](docs/images/Logviewer-pro-evidence.png)
+
+### 18. Investigation Report
+
+Investigation reporting produces structured reports for documenting investigation results.
+
+![LogViewer Pro Investigation Report](docs/images/Logviewer-pro-investigation-report.png)
+
+---
+
+## Licensing Evidence
+
+The following screenshots demonstrate the Pro licensing workflow.
+
+### 19. License Activation
+
+The license activation workflow verifies an issued Pro license and enables the applicable licensed features.
+
+![LogViewer License Activation](docs/images/Logviewer-license-activation.png)
+
+### 20. License Status
+
+License status displays the current license verification state and entitlement information.
+
+![LogViewer License Status](docs/images/Logviewer-license-status.png)
+
+---
+
+## Complete Project Workflow
+
+The LogViewer development and release workflow has been completed across the following major stages.
+
+### Core Platform
+
+- [✓] Linux log source discovery
+- [✓] Log viewing
+- [✓] Log searching
+- [✓] Log filtering
+- [✓] Live log monitoring
+- [✓] Log statistics
+- [✓] Security event analysis
+- [✓] Security correlation
+- [✓] IOC extraction
+- [✓] Snort alert handling
+- [✓] Report export
+- [✓] Configuration management
+
+### Pro Investigation Platform
+
+- [✓] Structured investigations
+- [✓] Investigation storage
+- [✓] Investigation evidence
+- [✓] Investigation IOCs
+- [✓] Investigation correlations
+- [✓] Threat scoring
+- [✓] Threat assessment
+- [✓] MITRE ATT&CK mapping
+- [✓] False-positive analysis
+- [✓] Process-tree analysis
+- [✓] Attack-chain reconstruction
+- [✓] Investigation timeline
+- [✓] Investigation findings
+- [✓] Investigation reporting
+- [✓] Evidence package creation
+- [✓] Evidence package verification
+- [✓] Report history
+
+### Licensing
+
+- [✓] Core/Pro feature separation
+- [✓] Pro feature gating
+- [✓] Digitally signed Pro licenses
+- [✓] License verification
+- [✓] License activation
+- [✓] License status
+- [✓] License expiration handling
+- [✓] License deactivation
+- [✓] Secure license-generator credentials
+- [✓] Public verification key
+- [✓] Private signing-key protection
+- [✓] Pro pricing documentation
+- [✓] Pro customer purchase agreement
+- [✓] Customer support documentation
+
+### Testing and Validation
+
+- [✓] Core automated tests
+- [✓] Pro automated tests
+- [✓] Investigation workflow validation
+- [✓] Timeline validation
+- [✓] MITRE Core-to-Pro bridge validation
+- [✓] Findings validation
+- [✓] License activation validation
+- [✓] License deactivation validation
+- [✓] Feature-gating validation
+- [✓] Installation validation
+- [✓] Customer installation workflow validation
+- [✓] Commercial release audit
+- [✓] Commercial release sign-off
+- [✓] Final regression testing
+
+### Release Engineering
+
+- [✓] Release manifest
+- [✓] Core release artifact
+- [✓] Pro release artifact
+- [✓] SHA-256 release checksums
+- [✓] Installation validation
+- [✓] Release documentation
+- [✓] Repository hygiene
+- [✓] Sensitive-data checks
+- [✓] Git working-tree verification
+- [✓] Git commit
+- [✓] GitHub push
+- [✓] GitHub repository verification
+
+### Commercial Delivery
+
+- [✓] Pro pricing
+- [✓] Purchase procedure
+- [✓] Customer support channels
+- [✓] Pro purchase agreement
+- [✓] License issuance workflow
+- [✓] License activation workflow
+- [✓] License verification workflow
+- [✓] License expiration/renewal documentation
+
+### Current Project State
+
+**LogViewer 2.0 is published in the GitHub repository.**
+
+The current source repository contains the Core platform, Pro investigation platform, licensing system, documentation, tests, release tooling, and visual evidence.
+
+The signed commercial release artifacts currently documented by the release process remain:
+
+```text
+LogViewer-Core-1.0.0.tar.gz
+LogViewer-Pro-1.0.0.tar.gz
+```
+
+These signed 1.0.0 artifacts are intentionally not represented as LogViewer 2.0 commercial artifacts. A future 2.0 commercial artifact release requires its own versioning, build, validation, checksum, and release sign-off process.
+
 # Pro Pricing
 
 ## Complete Pro License
